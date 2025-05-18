@@ -4,3 +4,5 @@
 * Dir Log printer.
 ## 0.0.3
 * onExit, Cancel timer.
+## 1.0.0
+* remove println

@@ -17,29 +17,6 @@ void main() async {
   XLog.onExit();
 }
 
-class BufPrinter extends LogPrinter {
-  StringBuffer buf = StringBuffer();
-
-  @override
-  void printItem(LogItem item) {
-    buf.writeln(item.toString());
-  }
-
-  @override
-  void flush() {
-    if (buf.isEmpty) return;
-    var s = buf.toString();
-    print(s);
-    buf.clear();
-  }
-
-  @override
-  void dispose() {
-    print("dispose()");
-    flush();
-  }
-}
-
 void _normal() {
   logd("Hello", "Tom", 1, 2, 3);
   loge("Hello", "Tom", 1, 2, 3, tag: "tom");

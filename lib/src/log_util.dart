@@ -4,18 +4,6 @@ const bool _isReleaseMode = bool.fromEnvironment('dart.vm.product');
 const bool _isProfileMode = bool.fromEnvironment('dart.vm.profile');
 const bool _isDebugMode = !_isReleaseMode && !_isProfileMode;
 
-dynamic println = LogVarargFunction((args, kwargs) {
-  StringSink? buf = kwargs["buf"];
-  if (buf != null) {
-    String line = args.map((e) => e.toString()).join(kwargs["sep"] ?? " ");
-    buf.writeln(line);
-    return;
-  }
-  if (!_isDebugMode) return;
-  String line = args.map((e) => e.toString()).join(kwargs["sep"] ?? " ");
-  print(line);
-});
-
 extension _DateTimeExt on DateTime {
   String get formatDateTimeX =>
       "${year.formated("0000")}-${month.formated("00")}-${day.formated("00")} ${hour.formated("00")}:${minute.formated("00")}:${second.formated("00")}.${millisecond.formated("000")}";
