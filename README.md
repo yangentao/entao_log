@@ -5,6 +5,12 @@
 ```dart
 
 void main() async {
+  println("this", "is", "log");
+  println("this", "is", "log", sep:", ");
+  StringBuffer buf = StringBuffer();
+  println("this", "is", "log", buf: buf, sep:", ");
+  print(buf.toString());
+  
   _normal();
   _tagLog();
   _filterLog();
