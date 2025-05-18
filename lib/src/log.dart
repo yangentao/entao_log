@@ -5,6 +5,7 @@ import 'package:entao_log/src/varcall.dart';
 part 'log_def.dart';
 part 'log_printer.dart';
 part 'log_util.dart';
+part 'dir_printer.dart';
 
 dynamic logv = LogVarargFunction((args, kwargs) {
   XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"]);
