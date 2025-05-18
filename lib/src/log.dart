@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:entao_log/src/varcall.dart';
@@ -38,13 +39,19 @@ final class XLog {
   static LogPrinter _printer = ConsolePrinter.inst;
   static int _lastMessageTime = 0;
   static final Duration _flushDuration = Duration(seconds: 2);
+  static Timer? _timer;
+
+  static void onExit() {
+    _timer?.cancel();
+    flush();
+  }
 
   static void _delayFlush(int tmMsg) {
     if (tmMsg < _lastMessageTime + _flushDuration.inMilliseconds) {
       return;
     }
     _lastMessageTime = tmMsg;
-    Future.delayed(_flushDuration, flush);
+    _timer = Timer(_flushDuration, flush);
   }
 
   static void flush() {

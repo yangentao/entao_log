@@ -14,6 +14,30 @@ void main() async {
   _normal();
   _tagLog();
   _filterLog();
+  XLog.onExit();
+}
+
+class BufPrinter extends LogPrinter {
+  StringBuffer buf = StringBuffer();
+
+  @override
+  void printItem(LogItem item) {
+    buf.writeln(item.toString());
+  }
+
+  @override
+  void flush() {
+    if (buf.isEmpty) return;
+    var s = buf.toString();
+    print(s);
+    buf.clear();
+  }
+
+  @override
+  void dispose() {
+    print("dispose()");
+    flush();
+  }
 }
 
 void _normal() {
@@ -27,6 +51,7 @@ void _tagLog() {
   lg.i("tag log info", 12, 3);
 }
 
+// ignore: unused_element
 void _fileLog() {
   var p = FileLogPrinter(File("/Users/entao/Downloads/a.txt"));
   var c = ConsolePrinter.inst;

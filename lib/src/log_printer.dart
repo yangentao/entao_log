@@ -82,11 +82,13 @@ class ConsolePrinter extends LogPrinter {
   static final ConsolePrinter inst = ConsolePrinter._internal();
 }
 
+/// XLog 2秒会flush()一下, 因此bufferSize只是个参考值.
 class FileLogPrinter extends LogPrinter {
-  File file;
+  final File file;
   final StringBuffer _buffer = StringBuffer();
+  final int bufferSize;
 
-  FileLogPrinter(this.file);
+  FileLogPrinter(this.file, {this.bufferSize = 8192});
 
   @override
   void dispose() {
@@ -102,7 +104,7 @@ class FileLogPrinter extends LogPrinter {
   @override
   void printItem(LogItem item) {
     _buffer.writeln(item.toString());
-    if (_buffer.length >= 8192) {
+    if (_buffer.length >= bufferSize) {
       flush();
     }
   }
