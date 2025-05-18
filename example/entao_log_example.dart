@@ -2,6 +2,14 @@ import 'dart:io';
 
 import 'package:entao_log/entao_log.dart';
 
+//
+// 2025-05-18 15:27:48.706 D xlog: Hello Tom 1 2 3
+// 2025-05-18 15:27:48.708 E tom: Hello Tom 1 2 3
+// 2025-05-18 15:27:48.709 E yet: tag log hello
+// 2025-05-18 15:27:48.709 I yet: tag log info 12 3
+// 2025-05-18 15:27:48.709 E xlog: e1
+//
+
 void main() async {
   _normal();
   _tagLog();
