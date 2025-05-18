@@ -20,7 +20,7 @@ extension _DateTimeExt on DateTime {
   String get formatDateTimeX =>
       "${year.formated("0000")}-${month.formated("00")}-${day.formated("00")} ${hour.formated("00")}:${minute.formated("00")}:${second.formated("00")}.${millisecond.formated("000")}";
 
-  String get formatDate => "${year.formated("0000")}-${month.formated("00")}-${day.formated("00")}}";
+  String get formatDate => "${year.formated("0000")}-${month.formated("00")}-${day.formated("00")}";
 
   bool sameDay(DateTime other) {
     return this.year == other.year && this.month == other.month && this.day == other.day;

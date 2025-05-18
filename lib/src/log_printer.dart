@@ -84,23 +84,26 @@ class ConsolePrinter extends LogPrinter {
 
 class FileLogPrinter extends LogPrinter {
   File file;
-  final IOSink _fileSink;
+  final StringBuffer _buffer = StringBuffer();
 
-  FileLogPrinter(this.file) : _fileSink = file.openWrite(mode: FileMode.append);
+  FileLogPrinter(this.file);
 
   @override
   void dispose() {
-    _fileSink.flush();
-    _fileSink.close();
+    flush();
   }
 
   @override
   void flush() {
-    _fileSink.flush();
+    file.writeAsStringSync(_buffer.toString(), mode: FileMode.append, flush: true);
+    _buffer.clear();
   }
 
   @override
   void printItem(LogItem item) {
-    _fileSink.writeln(item.toString());
+    _buffer.writeln(item.toString());
+    if (_buffer.length >= 8192) {
+      flush();
+    }
   }
 }

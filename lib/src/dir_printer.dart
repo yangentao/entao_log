@@ -8,10 +8,10 @@ class DirLogPrinter extends LogPrinter {
   final int maxFileCount;
   final int singleFileSize;
   final int checkLineCount;
+
   late final RegExp _nameReg = RegExp("${baseName}_\\d{4}-\\d{2}-\\d{2}\\.\\d+\\.$extName");
   FileLogPrinter? _filePrinter;
   int _lines = 0;
-
   int _dayFile = 0;
 
   DirLogPrinter(
@@ -25,6 +25,9 @@ class DirLogPrinter extends LogPrinter {
     assert(maxDays > 0);
     assert(baseName.isNotEmpty);
     assert(extName.isNotEmpty);
+    assert(maxFileCount > 0);
+    assert(singleFileSize > 0);
+    assert(checkLineCount > 0);
 
     if (!dir.existsSync()) {
       dir.createSync(recursive: true);
@@ -37,7 +40,7 @@ class DirLogPrinter extends LogPrinter {
       return;
     }
     if (_lines > checkLineCount) {
-      int sz = _filePrinter?.file.lengthSync() ?? 0;
+      int sz = _filePrinter!.file.lengthSync();
       if (sz > singleFileSize) {
         createNewFile();
         return;
@@ -66,7 +69,6 @@ class DirLogPrinter extends LogPrinter {
         if (!fileDate.sameDay(DateTime.now())) {
           File backFile = _makeBackupFile(fileDate);
           newFile.renameSync(backFile.path);
-          newFile = File(path.join(dir.path, "$baseName.$extName"));
         }
       }
     }
@@ -107,9 +109,8 @@ class DirLogPrinter extends LogPrinter {
     List<FileSystemEntity> fs = dir.listSync().where((e) => _isLogFile(e)).toList();
     fs.sort((a, b) => a.statSync().modified.millisecondsSinceEpoch - b.statSync().modified.millisecondsSinceEpoch);
     if (fs.isEmpty) return;
-    DateTime now = DateTime.now();
-    now.add(Duration(days: -maxDays));
-    int tm = now.millisecondsSinceEpoch;
+    DateTime delDate = DateTime.now().add(Duration(days: -maxDays));
+    int tm = delDate.millisecondsSinceEpoch;
     int minIndex = fs.length - maxFileCount;
     for (int i = 0; i < fs.length; ++i) {
       FileSystemEntity fe = fs[i];
@@ -128,6 +129,7 @@ class DirLogPrinter extends LogPrinter {
     _lines += 1;
     _checkFile();
     _filePrinter?.printItem(item);
+    _filePrinter?.flush();
   }
 
   @override
