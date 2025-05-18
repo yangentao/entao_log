@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:entao_log/src/varcall.dart';
+import 'package:os_detect/os_detect.dart' as osd;
+import 'package:path/path.dart' as path ;
 
 part 'log_def.dart';
 part 'log_printer.dart';

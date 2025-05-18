@@ -90,6 +90,7 @@ class FileLogPrinter extends LogPrinter {
 
   @override
   void dispose() {
+    _fileSink.flush();
     _fileSink.close();
   }
 

@@ -9,6 +9,8 @@ environment:
 
 dependencies:
 #  intl: ^0.19.0
+  os_detect: ^2.0.3
+  path: ^1.9.1
 
 dev_dependencies:
   lints: ^5.0.0
