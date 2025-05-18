@@ -6,23 +6,23 @@ part 'log_def.dart';
 part 'log_printer.dart';
 part 'log_util.dart';
 
-dynamic logv = VarargFunction((args, kwargs) {
+dynamic logv = LogVarargFunction((args, kwargs) {
   XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"]);
 });
 
-dynamic logd = VarargFunction((args, kwargs) {
+dynamic logd = LogVarargFunction((args, kwargs) {
   XLog.logItem(LogLevel.debug, args, tag: kwargs["tag"]);
 });
 
-dynamic logi = VarargFunction((args, kwargs) {
+dynamic logi = LogVarargFunction((args, kwargs) {
   XLog.logItem(LogLevel.info, args, tag: kwargs["tag"]);
 });
 
-dynamic logw = VarargFunction((args, kwargs) {
+dynamic logw = LogVarargFunction((args, kwargs) {
   XLog.logItem(LogLevel.warning, args, tag: kwargs["tag"]);
 });
 
-dynamic loge = VarargFunction((args, kwargs) {
+dynamic loge = LogVarargFunction((args, kwargs) {
   XLog.logItem(LogLevel.error, args, tag: kwargs["tag"]);
 });
 
@@ -97,19 +97,19 @@ class TagLog {
 
   TagLog(this.tag);
 
-  late dynamic v = VarargFunction((args, kwargs) {
+  late dynamic v = LogVarargFunction((args, kwargs) {
     XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"] ?? tag);
   });
-  late dynamic d = VarargFunction((args, kwargs) {
+  late dynamic d = LogVarargFunction((args, kwargs) {
     XLog.logItem(LogLevel.debug, args, tag: kwargs["tag"] ?? tag);
   });
-  late dynamic w = VarargFunction((args, kwargs) {
+  late dynamic w = LogVarargFunction((args, kwargs) {
     XLog.logItem(LogLevel.warning, args, tag: kwargs["tag"] ?? tag);
   });
-  late dynamic i = VarargFunction((args, kwargs) {
+  late dynamic i = LogVarargFunction((args, kwargs) {
     XLog.logItem(LogLevel.info, args, tag: kwargs["tag"] ?? tag);
   });
-  late dynamic e = VarargFunction((args, kwargs) {
+  late dynamic e = LogVarargFunction((args, kwargs) {
     XLog.logItem(LogLevel.error, args, tag: kwargs["tag"] ?? tag);
   });
 }

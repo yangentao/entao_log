@@ -4,7 +4,7 @@ const bool _isReleaseMode = bool.fromEnvironment('dart.vm.product');
 const bool _isProfileMode = bool.fromEnvironment('dart.vm.profile');
 const bool _isDebugMode = !_isReleaseMode && !_isProfileMode;
 
-dynamic println = VarargFunction((args, kwargs) {
+dynamic println = LogVarargFunction((args, kwargs) {
   StringSink? buf = kwargs["buf"];
   if (buf != null) {
     String line = args.map((e) => e.toString()).join(kwargs["sep"] ?? " ");

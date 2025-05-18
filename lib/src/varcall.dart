@@ -1,9 +1,9 @@
-typedef VarargCallback = void Function(List<dynamic> args, Map<String, dynamic> kwargs);
+typedef LogVarargCallback = void Function(List<dynamic> args, Map<String, dynamic> kwargs);
 
-class VarargFunction {
-  final VarargCallback callback;
+class LogVarargFunction {
+  final LogVarargCallback callback;
 
-  VarargFunction(this.callback);
+  LogVarargFunction(this.callback);
 
   void call() => callback([], {});
 
