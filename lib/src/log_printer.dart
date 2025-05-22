@@ -15,27 +15,53 @@ abstract class LogPrinter {
 }
 
 class TreeLogPrinter extends LogPrinter {
-  List<LogPrinter> list;
+  List<LogPrinter> printers;
 
-  TreeLogPrinter(this.list);
+  TreeLogPrinter([List<LogPrinter>? printers]) : this.printers = printers ?? [];
+
+  void add(LogPrinter p) {
+    if (!printers.contains(p)) {
+      printers.add(p);
+    }
+  }
+
+  void remove(bool Function(LogPrinter) test) {
+    printers.removeWhere((p) {
+      bool b = test(p);
+      if (b) {
+        p.dispose();
+      }
+      return b;
+    });
+  }
+
+  void set(LogPrinter p) {
+    for (var e in printers) {
+      if (!identical(e, p)) {
+        e.dispose();
+      }
+    }
+    printers.clear();
+    printers.add(p);
+  }
 
   @override
   void printItem(LogItem item) {
-    for (var p in list) {
+    for (var p in printers) {
       p.printIf(item);
     }
   }
 
   @override
   void flush() {
-    for (var e in list) {
+    for (var e in printers) {
       e.flush();
     }
   }
 
   @override
   void dispose() {
-    for (var e in list) {
+    for (var e in printers) {
       e.dispose();
     }
   }

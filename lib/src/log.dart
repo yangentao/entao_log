@@ -35,8 +35,8 @@ final class XLog {
   static String tag = "xlog";
   static LogLevel level = LogLevel.all;
   static LogFormater formater = DefaultLogFormater();
-  static LogFilter? filter;
-  static LogPrinter _printer = ConsolePrinter.inst;
+  static TreeLogFilter filter = TreeLogFilter([]);
+  static TreeLogPrinter printer = TreeLogPrinter([ConsolePrinter.inst]);
   static int _lastMessageTime = 0;
   static final Duration _flushDuration = Duration(seconds: 2);
   static Timer? _timer;
@@ -56,26 +56,50 @@ final class XLog {
 
   static void flush() {
     _lastMessageTime = 0;
-    _printer.flush();
+    printer.flush();
     if (_lastMessageTime != 0) {
       stderr.writeln("DONT log message in flush().");
     }
   }
 
   static void setPrinter(LogPrinter p) {
-    _printer.flush();
-    _printer.dispose();
-    _printer = p;
+    printer.flush();
+    printer.set(p);
+  }
+
+  static void addPrinter(LogPrinter p) {
+    printer.add(p);
+  }
+
+  static void removePrinter(bool Function(LogPrinter) test) {
+    printer.remove(test);
+  }
+
+  static void setTagLevel(String tag, LogLevel level) {
+    XLog.filter.remove((e) => e is TagFilter && e.tag == tag);
+    XLog.filter.add(TagFilter(tag: tag, level: level));
+  }
+
+  static void setFilter(LogFilter f) {
+    XLog.filter.set(f);
+  }
+
+  static void addFilter(LogFilter f) {
+    XLog.filter.add(f);
+  }
+
+  static void removeFilter(bool Function(LogFilter) test) {
+    XLog.filter.remove(test);
   }
 
   static void logItem(LogLevel level, List<dynamic> messages, {String? tag}) {
     if (!XLog.level.allow(level)) return;
-    if (!_printer.level.allow(level)) return;
+    if (!printer.level.allow(level)) return;
     DateTime tm = DateTime.now();
     LogItem item = LogItem(level: level, message: _anyListToString(messages), tag: tag ?? XLog.tag, time: tm);
-    if (filter?.allow(item) == false) return;
-    _printer.printIf(item);
-    if (_printer is! ConsolePrinter) {
+    if (filter.allow(item) == false) return;
+    printer.printIf(item);
+    if (printer is! ConsolePrinter) {
       _delayFlush(tm.millisecondsSinceEpoch);
     }
   }

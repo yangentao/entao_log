@@ -6,3 +6,5 @@
 * onExit, Cancel timer.
 ## 1.0.0
 * remove println
+## 1.0.1
+* add/remove/set

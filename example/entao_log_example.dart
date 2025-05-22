@@ -40,7 +40,7 @@ void _fileLog() {
 }
 
 void _filterLog() {
-  XLog.filter = FuncLogFilter((e) => e.level >= LogLevel.error);
+  XLog.filter.filters.add(FuncLogFilter((e) => e.level >= LogLevel.error));
   loge("e1");
   logd("d1");
 }

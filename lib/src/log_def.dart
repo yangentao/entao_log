@@ -72,14 +72,42 @@ class FuncLogFilter extends LogFilter {
   }
 }
 
-class TreeLogFilter extends LogFilter {
-  List<LogFilter> list;
+class TagFilter extends LogFilter {
+  String tag;
+  LogLevel level;
 
-  TreeLogFilter(this.list);
+  TagFilter({required this.tag, required this.level});
 
   @override
   bool allow(LogItem item) {
-    for (var f in list) {
+    if (item.tag == tag) {
+      return item.level >= level;
+    }
+    return true;
+  }
+}
+
+class TreeLogFilter extends LogFilter {
+  List<LogFilter> filters;
+
+  TreeLogFilter([List<LogFilter>? list]) : this.filters = list ?? [];
+
+  void set(LogFilter f) {
+    filters.clear();
+    filters.add(f);
+  }
+
+  void add(LogFilter f) {
+    filters.add(f);
+  }
+
+  void remove(bool Function(LogFilter) test) {
+    filters.removeWhere(test);
+  }
+
+  @override
+  bool allow(LogItem item) {
+    for (var f in filters) {
       if (!f.allow(item)) return false;
     }
     return true;
