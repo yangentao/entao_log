@@ -8,3 +8,5 @@
 * remove println
 ## 1.0.1
 * add/remove/set
+## 1.0.2
+* Console color

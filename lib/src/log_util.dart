@@ -21,8 +21,8 @@ extension _NumFormatExt on num {
   }
 }
 
-String _anyListToString(List<dynamic> messages) {
-  return messages.map((e) => _anyToString(e)).join(" ");
+String _anyListToString(List<dynamic> messages, {String? sep}) {
+  return messages.map((e) => _anyToString(e)).join(sep ?? " ");
 }
 
 String _anyToString(dynamic value) {

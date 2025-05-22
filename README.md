@@ -1,27 +1,27 @@
 ## dart log
 
-### example
+### Example
 
 ```dart
 
 void main() async {
-  _normal();
-  _tagLog();
-  _filterLog();
+  normal();
+  tagLog();
+  filterLog();
 }
 
-void _normal() {
+void normal() {
   logd("Hello", "Tom", 1, 2, 3);
   loge("Hello", "Tom", 1, 2, 3, tag: "tom");
 }
 
-void _tagLog() {
+void tagLog() {
   var lg = TagLog("yet");
   lg.e("tag log hello");
   lg.i("tag log info", 12, 3);
 }
 
-void _fileLog() {
+void fileLog() {
   var p = FileLogPrinter(File("/Users/entao/Downloads/a.txt"));
   var c = ConsolePrinter.inst;
   c.level = LogLevel.warning;
@@ -31,7 +31,7 @@ void _fileLog() {
   logd("to file");
 }
 
-void _filterLog() {
+void filterLog() {
   XLog.filter = FuncLogFilter((e) => e.level >= LogLevel.error);
   loge("e1");
   logd("d1");
@@ -39,4 +39,14 @@ void _filterLog() {
 
 ```
 
-![Output](screen.png)
+### Console log with color
+
+```dart
+ConsolePrinter.setEscapeCodes(LogLevel.warning, [EscapeCode.yellowLight, EscapeCode.backCyan]);
+logv("this", "is", "verbose");
+logd("this", "is", "debug", sep: ",");
+logw("this is", "warning", tag: "HTTP", sep: ", ");
+loge("this is", " error");
+```
+
+![Output](img/a.png)

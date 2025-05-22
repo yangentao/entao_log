@@ -78,35 +78,6 @@ class FuncLogPrinter extends LogPrinter {
   }
 }
 
-class ConsolePrinter extends LogPrinter {
-  ConsolePrinter._internal() {
-    if (!_isDebugMode) {
-      level = LogLevel.off;
-    }
-  }
-
-  @override
-  void printItem(LogItem item) {
-    switch (item.level) {
-      case LogLevel.verbose:
-        print(sgr("2") + sgr("3") + item.toString() + sgr("0"));
-      case LogLevel.info:
-        print(sgr("1") + item.toString() + sgr("0"));
-      case LogLevel.warning:
-        print(sgr("33") + item.toString() + sgr("0"));
-      case >= LogLevel.error:
-        print(sgr("31") + item.toString() + sgr("0"));
-      default:
-        print(item.toString());
-    }
-  }
-
-  static String sgr(String code) {
-    return "\u001b[${code}m";
-  }
-
-  static final ConsolePrinter inst = ConsolePrinter._internal();
-}
 
 /// XLog 2秒会flush()一下, 因此bufferSize只是个参考值.
 class FileLogPrinter extends LogPrinter {

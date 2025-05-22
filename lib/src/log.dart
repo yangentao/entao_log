@@ -4,29 +4,30 @@ import 'dart:io';
 import 'package:entao_log/src/varcall.dart';
 import 'package:path/path.dart' as path;
 
+part 'console_printer.dart';
 part 'dir_printer.dart';
 part 'log_def.dart';
 part 'log_printer.dart';
 part 'log_util.dart';
 
 dynamic logv = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"]);
+  XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"], sep: kwargs["sep"]);
 });
 
 dynamic logd = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.debug, args, tag: kwargs["tag"]);
+  XLog.logItem(LogLevel.debug, args, tag: kwargs["tag"], sep: kwargs["sep"]);
 });
 
 dynamic logi = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.info, args, tag: kwargs["tag"]);
+  XLog.logItem(LogLevel.info, args, tag: kwargs["tag"], sep: kwargs["sep"]);
 });
 
 dynamic logw = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.warning, args, tag: kwargs["tag"]);
+  XLog.logItem(LogLevel.warning, args, tag: kwargs["tag"], sep: kwargs["sep"]);
 });
 
 dynamic loge = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.error, args, tag: kwargs["tag"]);
+  XLog.logItem(LogLevel.error, args, tag: kwargs["tag"], sep: kwargs["sep"]);
 });
 
 final class XLog {
@@ -92,11 +93,11 @@ final class XLog {
     XLog.filter.remove(test);
   }
 
-  static void logItem(LogLevel level, List<dynamic> messages, {String? tag}) {
+  static void logItem(LogLevel level, List<dynamic> messages, {String? tag, String? sep}) {
     if (!XLog.level.allow(level)) return;
     if (!printer.level.allow(level)) return;
     DateTime tm = DateTime.now();
-    LogItem item = LogItem(level: level, message: _anyListToString(messages), tag: tag ?? XLog.tag, time: tm);
+    LogItem item = LogItem(level: level, time: tm, message: _anyListToString(messages, sep: sep), tag: tag ?? XLog.tag);
     if (filter.allow(item) == false) return;
     printer.printIf(item);
     if (printer is! ConsolePrinter) {
@@ -104,24 +105,24 @@ final class XLog {
     }
   }
 
-  static void verbose(List<dynamic> messages) {
-    logItem(LogLevel.verbose, messages);
+  static void verbose(List<dynamic> messages, {String? tag, String? sep}) {
+    logItem(LogLevel.verbose, messages, tag: tag, sep: sep);
   }
 
-  static void debug(List<dynamic> messages) {
-    logItem(LogLevel.debug, messages);
+  static void debug(List<dynamic> messages, {String? tag, String? sep}) {
+    logItem(LogLevel.debug, messages, tag: tag, sep: sep);
   }
 
-  static void info(List<dynamic> messages) {
-    logItem(LogLevel.info, messages);
+  static void info(List<dynamic> messages, {String? tag, String? sep}) {
+    logItem(LogLevel.info, messages, tag: tag, sep: sep);
   }
 
-  static void warn(List<dynamic> messages) {
-    logItem(LogLevel.warning, messages);
+  static void warn(List<dynamic> messages, {String? tag, String? sep}) {
+    logItem(LogLevel.warning, messages, tag: tag, sep: sep);
   }
 
-  static void error(List<dynamic> messages) {
-    logItem(LogLevel.error, messages);
+  static void error(List<dynamic> messages, {String? tag, String? sep}) {
+    logItem(LogLevel.error, messages, tag: tag, sep: sep);
   }
 }
 
@@ -131,18 +132,18 @@ class TagLog {
   TagLog(this.tag);
 
   late dynamic v = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"] ?? tag);
+    XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
   });
   late dynamic d = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.debug, args, tag: kwargs["tag"] ?? tag);
+    XLog.logItem(LogLevel.debug, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
   });
   late dynamic w = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.warning, args, tag: kwargs["tag"] ?? tag);
+    XLog.logItem(LogLevel.warning, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
   });
   late dynamic i = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.info, args, tag: kwargs["tag"] ?? tag);
+    XLog.logItem(LogLevel.info, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
   });
   late dynamic e = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.error, args, tag: kwargs["tag"] ?? tag);
+    XLog.logItem(LogLevel.error, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
   });
 }
