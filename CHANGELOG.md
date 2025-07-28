@@ -10,3 +10,5 @@
 * add/remove/set
 ## 1.0.2
 * Console color
+## 1.2.0
+* dart 3.8.0
