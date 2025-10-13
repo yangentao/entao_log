@@ -12,3 +12,6 @@
 * Console color
 ## 1.2.0
 * dart 3.8.0
+
+## 1.2.3
+* lint 6.0.0
