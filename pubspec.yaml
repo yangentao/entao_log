@@ -1,6 +1,6 @@
 name: entao_log
 description: Dart log.
-version: 1.2.3
+version: 1.2.5
 repository: https://github.com/yangentao/entao_log
 homepage: https://github.com/yangentao/entao_log
 
@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   path: ^1.9.1
+  println: ^1.0.0
+  any_call: ^1.0.0
 
 dev_dependencies:
   lints: ^6.0.0

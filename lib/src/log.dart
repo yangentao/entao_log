@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:entao_log/src/varcall.dart';
+import 'package:any_call/any_call.dart';
 import 'package:path/path.dart' as path;
 
 part 'console_printer.dart';
@@ -10,25 +10,35 @@ part 'log_def.dart';
 part 'log_printer.dart';
 part 'log_util.dart';
 
-dynamic logv = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"], sep: kwargs["sep"]);
-});
+dynamic logv = AnyCall<void>(
+  callback: (args, kwargs) {
+    XLog.logItem(LogLevel.verbose, args, tag: kwargs["\$tag"], sep: kwargs["\$sep"]);
+  },
+);
 
-dynamic logd = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.debug, args, tag: kwargs["tag"], sep: kwargs["sep"]);
-});
+dynamic logd = AnyCall<void>(
+  callback: (args, kwargs) {
+    XLog.logItem(LogLevel.debug, args, tag: kwargs["\$tag"], sep: kwargs["\$sep"]);
+  },
+);
 
-dynamic logi = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.info, args, tag: kwargs["tag"], sep: kwargs["sep"]);
-});
+dynamic logi = AnyCall<void>(
+  callback: (args, kwargs) {
+    XLog.logItem(LogLevel.info, args, tag: kwargs["\$tag"], sep: kwargs["\$sep"]);
+  },
+);
 
-dynamic logw = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.warning, args, tag: kwargs["tag"], sep: kwargs["sep"]);
-});
+dynamic logw = AnyCall<void>(
+  callback: (args, kwargs) {
+    XLog.logItem(LogLevel.warning, args, tag: kwargs["\$tag"], sep: kwargs["\$sep"]);
+  },
+);
 
-dynamic loge = LogVarargFunction((args, kwargs) {
-  XLog.logItem(LogLevel.error, args, tag: kwargs["tag"], sep: kwargs["sep"]);
-});
+dynamic loge = AnyCall<void>(
+  callback: (args, kwargs) {
+    XLog.logItem(LogLevel.error, args, tag: kwargs["\$tag"], sep: kwargs["\$sep"]);
+  },
+);
 
 final class XLog {
   XLog._();
@@ -97,7 +107,12 @@ final class XLog {
     if (!XLog.level.allow(level)) return;
     if (!printer.level.allow(level)) return;
     DateTime tm = DateTime.now();
-    LogItem item = LogItem(level: level, time: tm, message: _anyListToString(messages, sep: sep), tag: tag ?? XLog.tag);
+    LogItem item = LogItem(
+      level: level,
+      time: tm,
+      message: _anyListToString(messages, sep: sep),
+      tag: tag ?? XLog.tag,
+    );
     if (filter.allow(item) == false) return;
     printer.printIf(item);
     if (printer is! ConsolePrinter) {
@@ -131,19 +146,29 @@ class TagLog {
 
   TagLog(this.tag);
 
-  late dynamic v = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.verbose, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
-  });
-  late dynamic d = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.debug, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
-  });
-  late dynamic w = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.warning, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
-  });
-  late dynamic i = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.info, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
-  });
-  late dynamic e = LogVarargFunction((args, kwargs) {
-    XLog.logItem(LogLevel.error, args, tag: kwargs["tag"] ?? tag, sep: kwargs["sep"]);
-  });
+  late dynamic v = AnyCall<void>(
+    callback: (args, kwargs) {
+      XLog.logItem(LogLevel.verbose, args, tag: kwargs["\$tag"] ?? tag, sep: kwargs["\$sep"]);
+    },
+  );
+  late dynamic d = AnyCall<void>(
+    callback: (args, kwargs) {
+      XLog.logItem(LogLevel.debug, args, tag: kwargs["\$tag"] ?? tag, sep: kwargs["\$sep"]);
+    },
+  );
+  late dynamic w = AnyCall<void>(
+    callback: (args, kwargs) {
+      XLog.logItem(LogLevel.warning, args, tag: kwargs["\$tag"] ?? tag, sep: kwargs["\$sep"]);
+    },
+  );
+  late dynamic i = AnyCall<void>(
+    callback: (args, kwargs) {
+      XLog.logItem(LogLevel.info, args, tag: kwargs["\$tag"] ?? tag, sep: kwargs["\$sep"]);
+    },
+  );
+  late dynamic e = AnyCall<void>(
+    callback: (args, kwargs) {
+      XLog.logItem(LogLevel.error, args, tag: kwargs["\$tag"] ?? tag, sep: kwargs["\$sep"]);
+    },
+  );
 }
