@@ -18,3 +18,6 @@
 
 ## 1.2.5
 * println
+
+## 1.2.6
+* dart sdk change to 3.5.0
