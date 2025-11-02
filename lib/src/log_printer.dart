@@ -3,6 +3,10 @@ part of 'log.dart';
 abstract class LogPrinter {
   LogLevel level = LogLevel.all;
 
+  void off() {
+    level = LogLevel.off;
+  }
+
   void printIf(LogItem item) {
     if (level.allow(item.level)) printItem(item);
   }
@@ -77,7 +81,6 @@ class FuncLogPrinter extends LogPrinter {
     callback?.call(item);
   }
 }
-
 
 /// XLog 2秒会flush()一下, 因此bufferSize只是个参考值.
 class FileLogPrinter extends LogPrinter {

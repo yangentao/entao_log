@@ -42,11 +42,11 @@ void filterLog() {
 ### Console log with color
 
 ```dart
-ConsolePrinter.setEscapeCodes(LogLevel.warning, [EscapeCode.yellowLight, EscapeCode.backCyan]);
+ConsolePrinter.setEscapeCodes(LogLevel.warning, [EscapeCode.foreYellow, EscapeCode.backCyan]);
 logv("this", "is", "verbose");
 logd("this", "is", "debug", sep: ",");
 logw("this is", "warning", tag: "HTTP", sep: ", ");
 loge("this is", " error");
 ```
 
-![Output](img/a.png)
+![Output](./img/a.png)
