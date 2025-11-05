@@ -48,6 +48,7 @@ final class XLog {
   static LogLevel level = LogLevel.all;
   static LogFormater formater = DefaultLogFormater();
   static TreeLogFilter filter = TreeLogFilter([]);
+  static Map<String, LogLevel> _tagLevelMap = {};
   static TreeLogPrinter printer = TreeLogPrinter([ConsolePrinter.inst]);
   static int _lastMessageTime = 0;
   static final Duration _flushDuration = Duration(seconds: 2);
@@ -56,6 +57,22 @@ final class XLog {
   static void onExit() {
     _timer?.cancel();
     flush();
+  }
+
+  static void off({String? tag}) {
+    if (tag == null) {
+      level = LogLevel.off;
+    } else {
+      _tagLevelMap[tag] = LogLevel.off;
+    }
+  }
+
+  static void on({LogLevel level = LogLevel.all, String? tag}) {
+    if (tag == null) {
+      XLog.level = level;
+    } else {
+      _tagLevelMap[tag] = level;
+    }
   }
 
   static void _delayFlush(int tmMsg) {
@@ -107,6 +124,10 @@ final class XLog {
   static void logItem(LogLevel level, List<dynamic> messages, {String? tag, String? sep}) {
     if (!XLog.level.allow(level)) return;
     if (!printer.level.allow(level)) return;
+    LogLevel? lv = _tagLevelMap[tag ?? XLog.tag];
+    if (lv != null) {
+      if (!lv.allow(level)) return;
+    }
     DateTime tm = DateTime.now();
     LogItem item = LogItem(
       level: level,
@@ -146,6 +167,14 @@ class TagLog {
   String tag;
 
   TagLog(this.tag);
+
+  void on({LogLevel level = LogLevel.all}) {
+    XLog.on(tag: tag, level: level);
+  }
+
+  void off() {
+    XLog.off(tag: tag);
+  }
 
   late dynamic v = AnyCall<void>(
     callback: (args, kwargs) {

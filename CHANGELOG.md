@@ -21,3 +21,6 @@
 
 ## 1.2.6
 * dart sdk change to 3.5.0
+
+## 1.2.8
+* on/off

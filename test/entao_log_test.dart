@@ -10,4 +10,13 @@ void main() {
     logw("this is", "warning", tag: "HTTP", sep: ", ");
     loge("this is", " error");
   });
+
+  test("tag", () {
+    TagLog sql = TagLog("SQL");
+    sql.off();
+    sql.d("create table if no exist");
+    sql.on(level: LogLevel.error);
+    sql.d("create table if no exist");
+    sql.e("create table if no exist");
+  });
 }

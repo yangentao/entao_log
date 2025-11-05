@@ -18,7 +18,8 @@ void normal() {
 void tagLog() {
   var lg = TagLog("yet");
   lg.e("tag log hello");
-  lg.i("tag log info", 12, 3);
+  lg.off();
+  lg.i("tag log info", 12, 3); // will NOT print out.
 }
 
 void fileLog() {

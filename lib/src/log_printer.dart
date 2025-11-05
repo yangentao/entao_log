@@ -7,6 +7,10 @@ abstract class LogPrinter {
     level = LogLevel.off;
   }
 
+  void on({LogLevel level = LogLevel.all}) {
+    this.level = level;
+  }
+
   void printIf(LogItem item) {
     if (level.allow(item.level)) printItem(item);
   }
@@ -92,7 +96,9 @@ class FileLogPrinter extends LogPrinter {
 
   @override
   void dispose() {
-    flush();
+    if (_buffer.isNotEmpty) {
+      flush();
+    }
   }
 
   @override
