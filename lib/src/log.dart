@@ -48,7 +48,7 @@ final class XLog {
   static LogLevel level = LogLevel.all;
   static LogFormater formater = DefaultLogFormater();
   static TreeLogFilter filter = TreeLogFilter([]);
-  static Map<String, LogLevel> _tagLevelMap = {};
+  static final Map<String, LogLevel> _tagLevelMap = {};
   static TreeLogPrinter printer = TreeLogPrinter([ConsolePrinter.inst]);
   static int _lastMessageTime = 0;
   static final Duration _flushDuration = Duration(seconds: 2);
