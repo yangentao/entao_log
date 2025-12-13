@@ -71,3 +71,40 @@ class TagLog {
   late dynamic w = LogCall((list, map) => _add(LogLevel.warning, list, map));
   late dynamic e = LogCall((list, map) => _add(LogLevel.error, list, map));
 }
+
+typedef LogFilter = bool Function(LogItem);
+
+bool logAcceptAll(LogItem _) => true;
+
+typedef LogFormatter = String Function(LogItem item);
+
+String defaultLogFormatter(LogItem item) => "${item.time.formatDateTimeX} ${item.level.firstChar} ${item.tag}: ${item.message}";
+
+enum LogLevel {
+  all,
+  verbose,
+  debug,
+  info,
+  warning,
+  error,
+  fatal,
+  off;
+
+  String get firstChar => name.substring(0, 1).toUpperCase();
+}
+
+class LogItem {
+  final LogLevel level;
+  final String tag;
+  final String message;
+  final DateTime time;
+  final LogFormatter formatter;
+  late final String _text = formatter(this);
+
+  LogItem({required this.level, required this.message, required this.tag, DateTime? time, this.formatter = defaultLogFormatter}) : time = time ?? DateTime.now();
+
+  @override
+  String toString() {
+    return _text;
+  }
+}

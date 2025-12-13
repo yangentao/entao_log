@@ -7,7 +7,6 @@ class DirPrinter extends DelayPrinter {
   final int maxDays;
   final int maxFileCount;
   final int singleFileSize;
-  final int delayMills;
   FilePrinter? _filePrinter;
   int _dayFile = 0;
   int _preCheckTime = 0;
@@ -18,7 +17,7 @@ class DirPrinter extends DelayPrinter {
       {required this.dir,
       this.baseName = "app",
       this.extName = "log",
-      this.delayMills = 2000,
+      super.delay = 2000,
       this.maxDays = 30,
       this.maxFileCount = 200,
       this.singleFileSize = 20 * 1024 * 1024}) {
@@ -75,7 +74,7 @@ class DirPrinter extends DelayPrinter {
       }
     }
     _deleteExpired();
-    FilePrinter fs = FilePrinter(newFile, delay: delayMills);
+    FilePrinter fs = FilePrinter(newFile, delay: delay);
     _filePrinter = fs;
     return fs;
   }
