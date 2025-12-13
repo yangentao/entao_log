@@ -1,16 +1,16 @@
 part of '../../entao_log.dart';
 
-class LogConsole extends LogSink {
+class ConsolePrinter extends LogPrinter {
   // ignore: unused_element_parameter
-  LogConsole._({super.level, super.tags});
+  ConsolePrinter._({super.level, super.tags});
 
-  factory LogConsole({LogLevel level = LogLevel.all, Set<String>? tags}) {
-    instance.level = level;
-    instance.tags = tags;
+  factory ConsolePrinter({LogLevel level = LogLevel.all, Set<String>? tags}) {
+    instance._level = level;
+    instance._tags = tags;
     return instance;
   }
 
-  static LogConsole instance = LogConsole._();
+  static ConsolePrinter instance = ConsolePrinter._();
 
   @override
   FutureOr<void> println(LogItem item) {

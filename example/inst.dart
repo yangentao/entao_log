@@ -9,15 +9,14 @@ void main() async {
 }
 
 void testLog() async {
-  // xlog.stream.stream.map((e) => utf8.encode(e.toString()) as List<int>).pipe(stdout);
-  // xlog.stream.stream.pipe(MyConsumer());
-  xlog.stream.pipe(LogConsole());
-  // xlog.stream.stream.listen(print);
-  // xlog.stream.stream.listen((v) => print(v));
-  FileSink fs = FileSink(File('/Users/entao/Downloads/a.txt'));
-  xlog.stream.pipe(fs);
+  xlog.pipe(ConsolePrinter().on(level: LogLevel.all));
+  xlog.pipe(FilePrinter(File('/Users/entao/Downloads/a.txt')).on(level: LogLevel.info));
+  xlog.pipe(DirPrinter(dir: Directory("/Users/entao/Downloads/xlog")).on(level: LogLevel.error));
+
   for (int i = 0; i < 30; ++i) {
     logd(i, "hello", "entao", name: 'Jerry', age: 8);
+    logi(i, "hello", "entao", name: 'Jerry', age: 8);
+    loge(i, "hello", "entao", name: 'Jerry', age: 8);
     await Future.delayed(Duration(seconds: 1));
   }
 

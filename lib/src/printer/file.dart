@@ -1,10 +1,10 @@
 part of '../../entao_log.dart';
 
 /// 5秒会flush()一下.
-class FileSink extends DelayLogConsumer {
+class FilePrinter extends DelayPrinter {
   final File file;
 
-  FileSink(this.file, {super.delay = 2000});
+  FilePrinter(this.file, {super.delay = 2000});
 
   @override
   FutureOr<void> flush(String item) {

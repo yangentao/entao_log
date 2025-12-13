@@ -1,12 +1,12 @@
 part of '../../entao_log.dart';
 
-abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
+abstract class LogPrinter implements StreamConsumer<LogItem>, EventSink<LogItem> {
   StreamSubscription<LogItem>? _sub;
-  LogLevel level;
-  Set<String>? tags;
-  LogFilter? filter;
+  LogLevel _level;
+  Set<String>? _tags;
+  LogFilter? _filter;
 
-  LogSink({LogLevel? level, this.tags, this.filter}) : level = level ?? LogLevel.all;
+  LogPrinter({LogLevel? level, Set<String>? tags, bool Function(LogItem)? filter}) : _filter = filter, _tags = tags, _level = level ?? LogLevel.all;
 
   FutureOr<void> println(LogItem item);
 
@@ -37,9 +37,9 @@ abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
 
   @override
   void add(LogItem event) {
-    if (event.level.index < level.index) return;
-    if (tags == null || tags!.isEmpty || tags!.contains(event.tag)) {
-      if (filter == null || filter!(event)) {
+    if (event.level.index < _level.index) return;
+    if (_tags == null || _tags!.isEmpty || _tags!.contains(event.tag)) {
+      if (_filter == null || _filter!(event)) {
         println(event);
       }
     }
@@ -49,16 +49,16 @@ abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
   void addError(Object error, [StackTrace? stackTrace]) {}
 }
 
-extension LogSinkExt<T extends LogSink> on T {
+extension LogSinkExt<T extends LogPrinter> on T {
   T off() {
-    this.level = LogLevel.off;
+    this._level = LogLevel.off;
     return this;
   }
 
-  T filter({LogLevel? level, Set<String>? tags, LogFilter? filter}) {
-    this.level = level ?? LogLevel.all;
-    this.tags = tags ?? const {};
-    this.filter = filter;
+  T on({LogLevel? level, Set<String>? tags, LogFilter? filter}) {
+    this._level = level ?? LogLevel.all;
+    this._tags = tags ?? const {};
+    this._filter = filter;
     return this;
   }
 }

@@ -20,8 +20,12 @@ class xlog {
   static LogLevel level = LogLevel.all;
   static String separator = ' ';
 
+  static Future pipe(StreamConsumer<LogItem> streamConsumer) {
+    return stream.pipe(streamConsumer);
+  }
+
   static void _add(LogLevel level, List<dynamic> list, Map<String, dynamic> map) {
-    if (level < xlog.level) return;
+    if (level.index < xlog.level.index) return;
     LogItem item = LogItem(level: level, message: _logArgsToString(list, map, sep: xlog.separator), tag: map[r"$tag"] ?? TAG, formatter: formatter);
     if (!xlog.filter(item)) return;
     xlog.stream.add(item);
@@ -47,7 +51,7 @@ class TagLog {
   TagLog(this.tag, {this.level = LogLevel.all, this.formatter = defaultLogFormatter, this.filter = logAcceptAll, this.separator = ' '});
 
   void _add(LogLevel level, List<dynamic> list, Map<String, dynamic> map) {
-    if (level < this.level) return;
+    if (level.index < this.level.index) return;
     LogItem item = LogItem(level: level, message: _logArgsToString(list, map, sep: separator), tag: tag, formatter: formatter);
     if (!filter(item)) return;
     stream.add(item);

@@ -1,79 +1,83 @@
-part of '../entao_log.dart';
+part of '../../entao_log.dart';
 
-class DirLogPrinter extends LogPrinter {
+class DirPrinter extends DelayPrinter {
   final Directory dir;
   final String baseName;
   final String extName;
   final int maxDays;
   final int maxFileCount;
   final int singleFileSize;
-  final int checkLineCount;
+  final int delayMills;
+  FilePrinter? _filePrinter;
+  int _dayFile = 0;
+  int _preCheckTime = 0;
 
   late final RegExp _nameReg = RegExp("${baseName}_\\d{4}-\\d{2}-\\d{2}\\.\\d+\\.$extName");
-  FileLogPrinter? _filePrinter;
-  int _lines = 0;
-  int _dayFile = 0;
 
-  DirLogPrinter(
+  DirPrinter(
       {required this.dir,
       this.baseName = "app",
       this.extName = "log",
+      this.delayMills = 2000,
       this.maxDays = 30,
       this.maxFileCount = 200,
-      this.singleFileSize = 20 * 1024 * 1024,
-      this.checkLineCount = 200}) {
+      this.singleFileSize = 20 * 1024 * 1024}) {
     assert(maxDays > 0);
     assert(baseName.isNotEmpty);
     assert(extName.isNotEmpty);
     assert(maxFileCount > 0);
     assert(singleFileSize > 0);
-    assert(checkLineCount > 0);
 
     if (!dir.existsSync()) {
       dir.createSync(recursive: true);
     }
   }
 
-  void _checkFile() {
+  FilePrinter _checkFile() {
+    DateTime today = DateTime.now();
+
     if (_filePrinter == null) {
-      createNewFile();
-      return;
+      return createNewFile(today);
     }
-    if (_lines > checkLineCount) {
-      int sz = _filePrinter!.file.lengthSync();
-      if (sz > singleFileSize) {
-        createNewFile();
-        return;
-      }
+    if (today.millisecondsSinceEpoch < _preCheckTime + 300_000) {
+      return _filePrinter!;
+    }
+    _preCheckTime = today.millisecondsSinceEpoch;
+
+    int sz = _filePrinter!.file.lengthSync();
+    if (sz > singleFileSize) {
+      return createNewFile(today);
     }
     int day = DateTime.now().day;
     if (day != _dayFile) {
-      createNewFile();
+      return createNewFile(today);
     }
+    return _filePrinter!;
   }
 
-  void createNewFile() {
-    _dayFile = DateTime.now().day;
-    _lines = 0;
-    File newFile = File(path.join(dir.path, "$baseName.$extName"));
-    FileLogPrinter? fp = _filePrinter;
-    if (fp != null) {
-      File oldFile = fp.file;
-      fp.dispose();
+  FilePrinter createNewFile(DateTime today) {
+    FilePrinter? oldFp = _filePrinter;
+    if (oldFp != null) {
+      oldFp.close();
+      File oldFile = oldFp.file;
       _filePrinter = null;
-      File backFile = _makeBackupFile(DateTime.now());
+      File backFile = _makeBackupFile(today);
       oldFile.renameSync(backFile.path);
-    } else {
-      if (newFile.existsSync()) {
-        DateTime fileDate = newFile.statSync().modified;
-        if (!fileDate.sameDay(DateTime.now())) {
-          File backFile = _makeBackupFile(fileDate);
-          newFile.renameSync(backFile.path);
-        }
+    }
+
+    _dayFile = today.day;
+    File newFile = File(path.join(dir.path, "$baseName.$extName"));
+    if (newFile.existsSync()) {
+      DateTime fileDate = newFile.statSync().modified;
+      if (!fileDate.sameDay(today)) {
+        File backFile = _makeBackupFile(fileDate);
+        newFile.renameSync(backFile.path);
       }
     }
-    _filePrinter = FileLogPrinter(newFile);
     _deleteExpired();
+    FilePrinter fs = FilePrinter(newFile, delay: delayMills);
+    _filePrinter = fs;
+    return fs;
   }
 
   File _makeBackupFile(DateTime date) {
@@ -125,22 +129,8 @@ class DirLogPrinter extends LogPrinter {
   }
 
   @override
-  void printItem(LogItem item) {
-    _lines += 1;
-    _checkFile();
-    _filePrinter?.printItem(item);
-    _filePrinter?.flush();
-  }
-
-  @override
-  void dispose() {
-    _lines = 0;
-    _filePrinter?.dispose();
-    _filePrinter = null;
-  }
-
-  @override
-  void flush() {
-    _filePrinter?.flush();
+  void flush(String item) {
+    FilePrinter fs = _checkFile();
+    fs.flush(item);
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:entao_log/entao_log.dart';
 
 //
@@ -29,7 +27,7 @@ void _tagLog() {
 
 // ignore: unused_element
 void _fileLog() {
-  var p = FileLogPrinter(File("/Users/entao/Downloads/a.txt"));
+  // var p = FileLogPrinter(File("/Users/entao/Downloads/a.txt"));
 
   logd("to file");
 }
