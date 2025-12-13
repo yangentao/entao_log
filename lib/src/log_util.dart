@@ -24,7 +24,7 @@ extension _NumFormatExt on num {
 String _logArgsToString(List<dynamic> list, Map<String, dynamic> map, {required String sep}) {
   String a = list.map((e) => _anyToString(e)).join(sep);
   if (map.isEmpty) return a;
-  String b = map.entries.where((e) => !e.key.startsWith(r'$')).map((e) => '${e.key}: ${_anyToString(e.value)}').join(sep);
+  String b = map.entries.where((e) => !e.key.startsWith(r'$')).map((e) => '${e.key}:${_anyToString(e.value)}').join(sep);
   return '$a$sep$b';
 }
 

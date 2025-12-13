@@ -4,7 +4,7 @@ part of '../../entao_log.dart';
 class FileSink extends DelayLogConsumer {
   final File file;
 
-  FileSink(this.file, {super.delay = 5000});
+  FileSink(this.file, {super.delay = 2000});
 
   @override
   FutureOr<void> flush(String item) {

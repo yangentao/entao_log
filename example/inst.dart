@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:entao_log/entao_log.dart';
 
@@ -13,12 +14,13 @@ void testLog() async {
   xlog.stream.pipe(LogConsole());
   // xlog.stream.stream.listen(print);
   // xlog.stream.stream.listen((v) => print(v));
-  // FileSink fs = FileSink(File('/Users/entao/Downloads/a.txt'));
-  // xlog.stream.pipe(fs);
-  // xlog.stream.listen((v){
-  //   LogConsole.instance.add(v);
-  // });
-  logd("hello", "entao", name: 'Jerry', age: 8);
+  FileSink fs = FileSink(File('/Users/entao/Downloads/a.txt'));
+  xlog.stream.pipe(fs);
+  for (int i = 0; i < 30; ++i) {
+    logd(i, "hello", "entao", name: 'Jerry', age: 8);
+    await Future.delayed(Duration(seconds: 1));
+  }
+
   // logd("hello", "entao", name: 'Jerry', age: 8, $tag: "Animal");
   // loge("hello", "entao", name: 'Jerry', age: 8);
   // TagLog a = TagLog("SQL");
