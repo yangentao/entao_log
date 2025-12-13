@@ -30,10 +30,6 @@ void _tagLog() {
 // ignore: unused_element
 void _fileLog() {
   var p = FileLogPrinter(File("/Users/entao/Downloads/a.txt"));
-  var c = ConsolePrinter.inst;
-  c.level = LogLevel.warning;
-  var tree = TreeLogPrinter([p, c]);
-  // XLog.setPrinter(tree);
 
   logd("to file");
 }

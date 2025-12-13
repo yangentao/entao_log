@@ -10,6 +10,11 @@ abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
 
   FutureOr<void> println(LogItem item);
 
+  Future<void> cancel() async {
+    await _sub?.cancel();
+    _sub = null;
+  }
+
   @override
   Future<dynamic> addStream(Stream<LogItem> stream) async {
     await _sub?.cancel();
@@ -26,6 +31,7 @@ abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
   @override
   Future<dynamic> close() async {
     await _sub?.cancel();
+    _sub = null;
   }
 
   @override
