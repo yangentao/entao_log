@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:entao_log/entao_log.dart';
 
@@ -11,8 +9,8 @@ void main() async {
 
 void testLog() async {
   // xlog.stream.stream.map((e) => utf8.encode(e.toString()) as List<int>).pipe(stdout);
-  xlog.stream.stream.pipe(MyConsumer());
-  // xlog.stream.stream.pipe(LogConsole());
+  // xlog.stream.stream.pipe(MyConsumer());
+  xlog.stream.pipe(LogConsole());
   // xlog.stream.stream.listen(print);
   // xlog.stream.stream.listen((v) => print(v));
   // FileSink fs = FileSink(File('/Users/entao/Downloads/a.txt'));

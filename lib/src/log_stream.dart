@@ -6,12 +6,10 @@ class LogStream extends Stream<LogItem> implements EventSink<LogItem> {
   LogStream._();
 
   factory LogStream() {
-    return _inst;
+    return instance;
   }
 
-  static final LogStream _inst = LogStream._();
-
-  Stream<LogItem> get stream => streamController.stream;
+  static final LogStream instance = LogStream._();
 
   @override
   bool get isBroadcast => streamController.stream.isBroadcast;
