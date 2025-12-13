@@ -13,7 +13,7 @@ import 'package:entao_log/entao_log.dart';
 void main() async {
   _normal();
   _tagLog();
-  XLog.onExit();
+  // XLog.onExit();
 }
 
 void _normal() {
@@ -33,7 +33,7 @@ void _fileLog() {
   var c = ConsolePrinter.inst;
   c.level = LogLevel.warning;
   var tree = TreeLogPrinter([p, c]);
-  XLog.setPrinter(tree);
+  // XLog.setPrinter(tree);
 
   logd("to file");
 }

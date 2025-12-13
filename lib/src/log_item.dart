@@ -5,9 +5,10 @@ class LogItem {
   final String tag;
   final String message;
   final DateTime time;
-  late final String _text = xlog.formatter(this);
+  final LogFormatter formatter;
+  late final String _text = formatter(this);
 
-  LogItem({required this.level, required this.message, required this.tag, required this.time});
+  LogItem({required this.level, required this.message, required this.tag, DateTime? time, this.formatter = defaultLogFormatter}) : time = time ?? DateTime.now();
 
   @override
   String toString() {

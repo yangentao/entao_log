@@ -13,9 +13,9 @@ void main() {
 
   test("tag", () {
     TagLog sql = TagLog("SQL");
-    sql.off();
+    // sql.off();
     sql.d("create table if no exist");
-    sql.on(level: LogLevel.error);
+    // sql.on(level: LogLevel.error);
     sql.d("create table if no exist");
     sql.e("create table if no exist");
   });

@@ -1,111 +1,62 @@
 part of '../entao_log.dart';
 
+/// logd("Hello", "Jerry");
+/// logd("Hello", "Jerry", name: "Tom", $tag:"SQL");
+dynamic logv = LogCall((list, map) => xlog._add(LogLevel.verbose, list, map));
+dynamic logd = LogCall((list, map) => xlog._add(LogLevel.debug, list, map));
+dynamic logi = LogCall((list, map) => xlog._add(LogLevel.info, list, map));
+dynamic logw = LogCall((list, map) => xlog._add(LogLevel.warning, list, map));
+dynamic loge = LogCall((list, map) => xlog._add(LogLevel.error, list, map));
+
+/// xlog.d("Hello", "Jerry");
+/// xlog.d("Hello", "Jerry", name: "Tom", $tag:"SQL");
 class xlog {
   xlog._();
 
+  static final String TAG = "xlog";
+  static final LogStream stream = LogStream();
   static LogFormatter formatter = defaultLogFormatter;
   static LogFilter filter = (item) => true;
+  static LogLevel level = LogLevel.all;
+  static String separator = ' ';
+
+  static void _add(LogLevel level, List<dynamic> list, Map<String, dynamic> map) {
+    print('xlog.add: ');
+    if (level < xlog.level) return;
+    LogItem item = LogItem(level: level, message: _logArgsToString(list, map, sep: xlog.separator), tag: map[r"$tag"] ?? TAG, formatter: formatter);
+    if (!xlog.filter(item)) return;
+    xlog.stream.add(item);
+  }
+
+  late dynamic v = LogCall((list, map) => _add(LogLevel.verbose, list, map));
+  late dynamic d = LogCall((list, map) => _add(LogLevel.debug, list, map));
+  late dynamic i = LogCall((list, map) => _add(LogLevel.info, list, map));
+  late dynamic w = LogCall((list, map) => _add(LogLevel.warning, list, map));
+  late dynamic e = LogCall((list, map) => _add(LogLevel.error, list, map));
 }
 
-final class XLog {
-  XLog._();
+/// final a = TagLog('SQL')
+/// a.d('Hello", name: 'Jerry')
+class TagLog {
+  final LogStream stream = LogStream();
+  final String tag;
+  final LogLevel level;
+  final LogFilter filter;
+  final LogFormatter formatter;
+  final String separator;
 
-  static String tag = "xlog";
-  static LogLevel level = LogLevel.all;
-  static final Map<String, LogLevel> _tagLevelMap = {};
-  static TreeLogPrinter printer = TreeLogPrinter([ConsolePrinter.inst]);
-  static int _lastMessageTime = 0;
-  static final Duration _flushDuration = Duration(seconds: 2);
-  static Timer? _timer;
+  TagLog(this.tag, {this.level = LogLevel.all, this.formatter = defaultLogFormatter, this.filter = logAcceptAll, this.separator = ' '});
 
-  static void onExit() {
-    _timer?.cancel();
-    flush();
+  void _add(LogLevel level, List<dynamic> list, Map<String, dynamic> map) {
+    if (level < this.level) return;
+    LogItem item = LogItem(level: level, message: _logArgsToString(list, map, sep: separator), tag: tag, formatter: formatter);
+    if (!filter(item)) return;
+    stream.add(item);
   }
 
-  static void off({String? tag}) {
-    if (tag == null) {
-      level = LogLevel.off;
-    } else {
-      _tagLevelMap[tag] = LogLevel.off;
-    }
-  }
-
-  static void on({LogLevel level = LogLevel.all, String? tag}) {
-    if (tag == null) {
-      XLog.level = level;
-    } else {
-      _tagLevelMap[tag] = level;
-    }
-  }
-
-  static void _delayFlush(int tmMsg) {
-    if (tmMsg < _lastMessageTime + _flushDuration.inMilliseconds) {
-      return;
-    }
-    _lastMessageTime = tmMsg;
-    _timer = Timer(_flushDuration, flush);
-  }
-
-  static void flush() {
-    _lastMessageTime = 0;
-    printer.flush();
-    if (_lastMessageTime != 0) {
-      stderr.writeln("DONT log message in flush().");
-    }
-  }
-
-  static void setPrinter(LogPrinter p) {
-    printer.flush();
-    printer.set(p);
-  }
-
-  static void addPrinter(LogPrinter p) {
-    printer.add(p);
-  }
-
-  static void removePrinter(bool Function(LogPrinter) test) {
-    printer.remove(test);
-  }
-
-  static void logItem(LogLevel level, List<dynamic> messages, {String? tag, String? sep}) {
-    if (!XLog.level.allow(level)) return;
-    if (!printer.level.allow(level)) return;
-    LogLevel? lv = _tagLevelMap[tag ?? XLog.tag];
-    if (lv != null) {
-      if (!lv.allow(level)) return;
-    }
-    DateTime tm = DateTime.now();
-    LogItem item = LogItem(
-      level: level,
-      time: tm,
-      message: _anyListToString(messages, sep: sep),
-      tag: tag ?? XLog.tag,
-    );
-    if (!xlog.filter(item)) return;
-    printer.printIf(item);
-    if (printer is! ConsolePrinter) {
-      _delayFlush(tm.millisecondsSinceEpoch);
-    }
-  }
-
-  static void verbose(List<dynamic> messages, {String? tag, String? sep}) {
-    logItem(LogLevel.verbose, messages, tag: tag, sep: sep);
-  }
-
-  static void debug(List<dynamic> messages, {String? tag, String? sep}) {
-    logItem(LogLevel.debug, messages, tag: tag, sep: sep);
-  }
-
-  static void info(List<dynamic> messages, {String? tag, String? sep}) {
-    logItem(LogLevel.info, messages, tag: tag, sep: sep);
-  }
-
-  static void warn(List<dynamic> messages, {String? tag, String? sep}) {
-    logItem(LogLevel.warning, messages, tag: tag, sep: sep);
-  }
-
-  static void error(List<dynamic> messages, {String? tag, String? sep}) {
-    logItem(LogLevel.error, messages, tag: tag, sep: sep);
-  }
+  late dynamic v = LogCall((list, map) => _add(LogLevel.verbose, list, map));
+  late dynamic d = LogCall((list, map) => _add(LogLevel.debug, list, map));
+  late dynamic i = LogCall((list, map) => _add(LogLevel.info, list, map));
+  late dynamic w = LogCall((list, map) => _add(LogLevel.warning, list, map));
+  late dynamic e = LogCall((list, map) => _add(LogLevel.error, list, map));
 }

@@ -13,7 +13,14 @@ abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
   @override
   Future<dynamic> addStream(Stream<LogItem> stream) async {
     await _sub?.cancel();
-    _sub = stream.listen(add, onError: addError, onDone: close);
+    final completer = Completer();
+    _sub = stream.listen(
+      add,
+      onError: completer.completeError,
+      onDone: completer.complete,
+      cancelOnError: true,
+    );
+    return completer.future;
   }
 
   @override

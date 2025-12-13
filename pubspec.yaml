@@ -10,8 +10,8 @@ resolution: workspace
 
 dependencies:
   path: ^1.9.1
-  println: ^1.0.4
-  any_call: ^1.0.1
+  entao_lint: ^1.0.1
+
 
 dev_dependencies:
   lints: ^6.0.0

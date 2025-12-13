@@ -21,8 +21,11 @@ extension _NumFormatExt on num {
   }
 }
 
-String _anyListToString(List<dynamic> messages, {String? sep}) {
-  return messages.map((e) => _anyToString(e)).join(sep ?? " ");
+String _logArgsToString(List<dynamic> list, Map<String, dynamic> map, {required String sep}) {
+  String a = list.map((e) => _anyToString(e)).join(sep);
+  if (map.isEmpty) return a;
+  String b = map.entries.map((e) => '${e.key}: ${_anyToString(e.value)}').join(sep);
+  return '$a$sep$b';
 }
 
 String _anyToString(dynamic value) {
@@ -65,4 +68,29 @@ void _mergeCall(Object key, void Function() callback, {int delay = 1000, bool in
   }
 
   Future.delayed(Duration(milliseconds: delay), invokeCallback);
+}
+
+class LogCall {
+  final void Function(List<dynamic> list, Map<String, dynamic> map) callback;
+
+  LogCall(this.callback);
+
+  void call() {
+    return callback([], {});
+  }
+
+  //Symbol("x") => x
+  String _symbolText(Symbol sym) {
+    String s = sym.toString();
+    return s.substring(8, s.length - 2);
+  }
+
+  @override
+  void noSuchMethod(Invocation invocation) {
+    List<dynamic> list = invocation.positionalArguments.toList();
+    Map<String, dynamic> map = invocation.namedArguments.map((sym, v) {
+      return MapEntry(_symbolText(sym), v);
+    });
+    callback(list, map);
+  }
 }
