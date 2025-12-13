@@ -38,8 +38,8 @@ enum LogLevel implements Comparable<LogLevel> {
 
 class LogItem {
   LogLevel level;
-  String message;
   String tag;
+  String message;
   DateTime time;
   late String textLine;
 
