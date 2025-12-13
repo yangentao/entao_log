@@ -13,12 +13,20 @@ dynamic loge = LogCall((list, map) => xlog._add(LogLevel.error, list, map));
 class xlog {
   xlog._();
 
-  static final String TAG = "xlog";
   static final LogStream stream = LogStream();
+  static String TAG = "xlog";
   static LogFormatter formatter = defaultLogFormatter;
   static LogFilter filter = (item) => true;
   static LogLevel level = LogLevel.all;
   static String separator = ' ';
+
+  static StreamSubscription<String> listenText(void Function(String event)? onData, {Function? onError, void Function()? onDone, bool? cancelOnError}) {
+    return xlog.stream.map((e) => e.toString()).listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+  }
+
+  static StreamSubscription<LogItem> listen(void Function(LogItem event)? onData, {Function? onError, void Function()? onDone, bool? cancelOnError}) {
+    return xlog.stream.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+  }
 
   static Future pipe(StreamConsumer<LogItem> streamConsumer) {
     return stream.pipe(streamConsumer);
