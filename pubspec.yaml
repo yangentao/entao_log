@@ -5,7 +5,7 @@ repository: https://github.com/yangentao/entao_log
 homepage: https://github.com/yangentao/entao_log
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.7.0
 resolution: workspace
 
 dependencies:

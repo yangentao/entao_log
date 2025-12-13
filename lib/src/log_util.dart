@@ -37,3 +37,32 @@ String _anyToString(dynamic value) {
       return value.toString();
   }
 }
+
+int get _millsNow => DateTime.now().millisecondsSinceEpoch;
+
+Map<Object, MapEntry<int, void Function()>> _mergeMap = {};
+
+void _mergeCall(Object key, void Function() callback, {int delay = 1000, bool interval = false}) {
+  if (_mergeMap.containsKey(key)) {
+    _mergeMap[key] = MapEntry(_millsNow, callback);
+    return;
+  }
+  _mergeMap[key] = MapEntry(_millsNow, callback);
+
+  void invokeCallback() {
+    if (interval) {
+      _mergeMap.remove(key)?.value.call();
+    } else {
+      MapEntry<int, void Function()>? e = _mergeMap[key];
+      if (e == null) return;
+      int leftMills = e.key + delay - _millsNow;
+      if (leftMills <= 0) {
+        _mergeMap.remove(key)?.value.call();
+      } else {
+        Future.delayed(Duration(milliseconds: leftMills), invokeCallback);
+      }
+    }
+  }
+
+  Future.delayed(Duration(milliseconds: delay), invokeCallback);
+}
