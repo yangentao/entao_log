@@ -8,7 +8,7 @@ abstract class DelayLogConsumer extends LogSink {
 
   DelayLogConsumer({super.level, super.tags, this.maxLine, this.delay = 2000});
 
-  FutureOr<void> flush(String item);
+  void flush(String item);
 
   void _flush() {
     if (buffer.isEmpty) return;

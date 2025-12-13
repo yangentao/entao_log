@@ -1,7 +1,7 @@
 part of '../entao_log.dart';
 
 class LogStream extends Stream<LogItem> implements EventSink<LogItem> {
-  final StreamController<LogItem> streamController = StreamController();
+  final StreamController<LogItem> streamController = StreamController<LogItem>.broadcast();
 
   LogStream._();
 
@@ -10,6 +10,18 @@ class LogStream extends Stream<LogItem> implements EventSink<LogItem> {
   }
 
   static final LogStream _inst = LogStream._();
+
+  Stream<LogItem> get stream => streamController.stream;
+
+  @override
+  bool get isBroadcast => streamController.stream.isBroadcast;
+
+  @override
+  Stream<LogItem> asBroadcastStream({
+    void Function(StreamSubscription<LogItem> subscription)? onListen,
+    void Function(StreamSubscription<LogItem> subscription)? onCancel,
+  }) =>
+      streamController.stream.asBroadcastStream(onListen: onListen, onCancel: onCancel);
 
   @override
   void add(LogItem event) {

@@ -19,10 +19,20 @@ abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
   Future<dynamic> addStream(Stream<LogItem> stream) async {
     await _sub?.cancel();
     final completer = Completer();
+    print("addStream $stream");
     _sub = stream.listen(
-      add,
-      onError: completer.completeError,
-      onDone: completer.complete,
+      (v) {
+        print("recv: $v");
+        add(v);
+      },
+      onError: (e ,st){
+        print("error");
+        completer.completeError(e, st);
+      },
+      onDone: (){
+        print("done");
+        completer.complete();
+      },
       cancelOnError: true,
     );
     return completer.future;

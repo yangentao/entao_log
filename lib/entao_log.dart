@@ -7,6 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:println/println.dart';
 
 part 'src/consumer/console.dart';
+part 'src/consumer/file_printer.dart';
 part 'src/consumer/delay_consumer.dart';
 part 'src/consumer/sink.dart';
 part 'src/dir_printer.dart';
