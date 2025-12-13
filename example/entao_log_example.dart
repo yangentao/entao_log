@@ -13,7 +13,6 @@ import 'package:entao_log/entao_log.dart';
 void main() async {
   _normal();
   _tagLog();
-  _filterLog();
   XLog.onExit();
 }
 
@@ -37,10 +36,4 @@ void _fileLog() {
   XLog.setPrinter(tree);
 
   logd("to file");
-}
-
-void _filterLog() {
-  XLog.filter.filters.add(FuncLogFilter((e) => e.level >= LogLevel.error));
-  loge("e1");
-  logd("d1");
 }

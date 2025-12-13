@@ -1,18 +1,16 @@
 part of '../entao_log.dart';
 
 class LogItem {
-  LogLevel level;
-  String tag;
-  String message;
-  DateTime time;
-  late String textLine;
+  final LogLevel level;
+  final String tag;
+  final String message;
+  final DateTime time;
+  late final String _text = xlog.formatter(this);
 
-  LogItem({required this.level, required this.message, required this.tag, required this.time}) {
-    textLine = XLog.formater.format(this);
-  }
+  LogItem({required this.level, required this.message, required this.tag, required this.time});
 
   @override
   String toString() {
-    return textLine;
+    return _text;
   }
 }

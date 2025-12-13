@@ -6,7 +6,7 @@ abstract class BufferedLogConsumer extends LogSink {
   final int? maxLine;
   final int delay;
 
-  BufferedLogConsumer({super.level, super.tag, this.maxLine, this.delay = 2000});
+  BufferedLogConsumer({super.level, super.tags, this.maxLine, this.delay = 2000});
 
   FutureOr<void> flush(String item);
 
@@ -18,8 +18,8 @@ abstract class BufferedLogConsumer extends LogSink {
   }
 
   @override
-  FutureOr<void> println(String item) async {
-    buffer.add(item);
+  FutureOr<void> println(LogItem item) async {
+    buffer.add(item.toString());
     if (maxLine != null && buffer.length >= maxLine!) {
       _flush();
       return;

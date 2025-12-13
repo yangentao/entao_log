@@ -1,12 +1,17 @@
 part of '../entao_log.dart';
 
+class xlog {
+  xlog._();
+
+  static LogFormatter formatter = defaultLogFormatter;
+  static LogFilter filter = (item) => true;
+}
+
 final class XLog {
   XLog._();
 
   static String tag = "xlog";
   static LogLevel level = LogLevel.all;
-  static LogFormater formater = DefaultLogFormater();
-  static TreeLogFilter filter = TreeLogFilter([]);
   static final Map<String, LogLevel> _tagLevelMap = {};
   static TreeLogPrinter printer = TreeLogPrinter([ConsolePrinter.inst]);
   static int _lastMessageTime = 0;
@@ -63,23 +68,6 @@ final class XLog {
     printer.remove(test);
   }
 
-  static void setTagLevel(String tag, LogLevel level) {
-    XLog.filter.remove((e) => e is TagFilter && e.tag == tag);
-    XLog.filter.add(TagFilter(tag: tag, level: level));
-  }
-
-  static void setFilter(LogFilter f) {
-    XLog.filter.set(f);
-  }
-
-  static void addFilter(LogFilter f) {
-    XLog.filter.add(f);
-  }
-
-  static void removeFilter(bool Function(LogFilter) test) {
-    XLog.filter.remove(test);
-  }
-
   static void logItem(LogLevel level, List<dynamic> messages, {String? tag, String? sep}) {
     if (!XLog.level.allow(level)) return;
     if (!printer.level.allow(level)) return;
@@ -94,7 +82,7 @@ final class XLog {
       message: _anyListToString(messages, sep: sep),
       tag: tag ?? XLog.tag,
     );
-    if (filter.allow(item) == false) return;
+    if (!xlog.filter(item)) return;
     printer.printIf(item);
     if (printer is! ConsolePrinter) {
       _delayFlush(tm.millisecondsSinceEpoch);

@@ -3,11 +3,12 @@ part of '../../entao_log.dart';
 abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
   StreamSubscription<LogItem>? _sub;
   LogLevel level;
-  String? tag;
+  Set<String>? tags;
+  LogFilter? filter;
 
-  LogSink({LogLevel? level, String? tag}) : level = level ?? LogLevel.all;
+  LogSink({LogLevel? level, this.tags, this.filter}) : level = level ?? LogLevel.all;
 
-  FutureOr<void> println(String item);
+  FutureOr<void> println(LogItem item);
 
   @override
   Future<dynamic> addStream(Stream<LogItem> stream) async {
@@ -22,11 +23,28 @@ abstract class LogSink implements StreamConsumer<LogItem>, EventSink<LogItem> {
 
   @override
   void add(LogItem event) {
-    if (event.level.index >= level.index) {
-      println(event.toString());
+    if (event.level.index < level.index) return;
+    if (tags == null || tags!.isEmpty || tags!.contains(event.tag)) {
+      if (filter == null || filter!(event)) {
+        println(event);
+      }
     }
   }
 
   @override
   void addError(Object error, [StackTrace? stackTrace]) {}
+}
+
+extension LogSinkExt<T extends LogSink> on T {
+  T off() {
+    this.level = LogLevel.off;
+    return this;
+  }
+
+  T filter({LogLevel? level, Set<String>? tags, LogFilter? filter}) {
+    this.level = level ?? LogLevel.all;
+    this.tags = tags ?? const {};
+    this.filter = filter;
+    return this;
+  }
 }
