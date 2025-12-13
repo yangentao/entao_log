@@ -1,4 +1,4 @@
-part of 'log.dart';
+part of '../entao_log.dart';
 
 const bool _isReleaseMode = bool.fromEnvironment('dart.vm.product');
 const bool _isProfileMode = bool.fromEnvironment('dart.vm.profile');

@@ -24,3 +24,5 @@
 
 ## 1.2.8
 * on/off
+## 2.0.0
+* break change, use stream-style

@@ -1,16 +1,4 @@
-import 'dart:async';
-import 'dart:io';
-
-import 'package:any_call/any_call.dart';
-import 'package:path/path.dart' as path;
-import 'package:println/println.dart';
-
-part 'console_printer.dart';
-part 'dir_printer.dart';
-part 'log_def.dart';
-part 'log_printer.dart';
-part 'log_util.dart';
-
+part of '../entao_log.dart';
 dynamic logv = AnyCall<void>(
   callback: (args, kwargs) {
     XLog.logItem(LogLevel.verbose, args, tag: kwargs["\$tag"], sep: kwargs["\$sep"]);

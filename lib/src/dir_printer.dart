@@ -1,4 +1,4 @@
-part of 'log.dart';
+part of '../entao_log.dart';
 
 class DirLogPrinter extends LogPrinter {
   final Directory dir;

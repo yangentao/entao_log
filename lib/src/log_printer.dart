@@ -1,4 +1,4 @@
-part of 'log.dart';
+part of '../entao_log.dart';
 
 abstract class LogPrinter {
   LogLevel level = LogLevel.all;

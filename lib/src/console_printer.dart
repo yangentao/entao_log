@@ -1,4 +1,4 @@
-part of 'log.dart';
+part of '../entao_log.dart';
 
 class ConsolePrinter extends LogPrinter {
   static final Map<LogLevel, List<EscapeCode>> _map = {

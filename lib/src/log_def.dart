@@ -1,4 +1,4 @@
-part of 'log.dart';
+part of '../entao_log.dart';
 
 enum LogLevel implements Comparable<LogLevel> {
   all,
