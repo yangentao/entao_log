@@ -21,7 +21,6 @@ class xlog {
   static String separator = ' ';
 
   static void _add(LogLevel level, List<dynamic> list, Map<String, dynamic> map) {
-    print('xlog.add: ');
     if (level < xlog.level) return;
     LogItem item = LogItem(level: level, message: _logArgsToString(list, map, sep: xlog.separator), tag: map[r"$tag"] ?? TAG, formatter: formatter);
     if (!xlog.filter(item)) return;
@@ -38,7 +37,7 @@ class xlog {
 /// final a = TagLog('SQL')
 /// a.d('Hello", name: 'Jerry')
 class TagLog {
-  final LogStream stream = LogStream();
+  final LogStream stream = xlog.stream;
   final String tag;
   final LogLevel level;
   final LogFilter filter;

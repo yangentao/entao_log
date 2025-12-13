@@ -1,12 +1,12 @@
 part of '../../entao_log.dart';
 
 /// delay,  milliseconds
-abstract class BufferedLogConsumer extends LogSink {
+abstract class DelayLogConsumer extends LogSink {
   final List<String> buffer = [];
   final int? maxLine;
   final int delay;
 
-  BufferedLogConsumer({super.level, super.tags, this.maxLine, this.delay = 2000});
+  DelayLogConsumer({super.level, super.tags, this.maxLine, this.delay = 2000});
 
   FutureOr<void> flush(String item);
 

@@ -4,7 +4,9 @@ class LogConsole extends LogSink {
   // ignore: unused_element_parameter
   LogConsole._({super.level, super.tags});
 
-  factory LogConsole() {
+  factory LogConsole({LogLevel level = LogLevel.all, Set<String>? tags}) {
+    instance.level = level;
+    instance.tags = tags;
     return instance;
   }
 

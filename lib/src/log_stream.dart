@@ -28,7 +28,6 @@ class LogStream extends Stream<LogItem> implements EventSink<LogItem> {
 
   @override
   StreamSubscription<LogItem> listen(void Function(LogItem event)? onData, {Function? onError, void Function()? onDone, bool? cancelOnError}) {
-    print("listen");
     return streamController.stream.listen(
       onData,
       onError: onError,
