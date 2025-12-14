@@ -26,3 +26,6 @@
 * on/off
 ## 2.0.0
 * break change, use stream-style
+
+## 2.0.1
+* readme
