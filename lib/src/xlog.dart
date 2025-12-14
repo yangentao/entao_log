@@ -1,5 +1,6 @@
 part of '../entao_log.dart';
 
+/// xlog.pipe(ConsolePrinter());
 /// logd("Hello", "Jerry");
 /// logd("Hello", "Jerry", name: "Tom", $tag:"SQL");
 dynamic logv = LogCall((list, map) => xlog._add(LogLevel.verbose, list, map));
@@ -8,6 +9,7 @@ dynamic logi = LogCall((list, map) => xlog._add(LogLevel.info, list, map));
 dynamic logw = LogCall((list, map) => xlog._add(LogLevel.warning, list, map));
 dynamic loge = LogCall((list, map) => xlog._add(LogLevel.error, list, map));
 
+/// xlog.pipe(ConsolePrinter());
 /// xlog.d("Hello", "Jerry");
 /// xlog.d("Hello", "Jerry", name: "Tom", $tag:"SQL");
 class xlog {

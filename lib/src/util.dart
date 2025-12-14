@@ -1,9 +1,5 @@
 part of '../entao_log.dart';
 
-const bool _isReleaseMode = bool.fromEnvironment('dart.vm.product');
-const bool _isProfileMode = bool.fromEnvironment('dart.vm.profile');
-const bool _isDebugMode = !_isReleaseMode && !_isProfileMode;
-
 extension _DateTimeExt on DateTime {
   String get formatDateTimeX =>
       "${year.formated("0000")}-${month.formated("00")}-${day.formated("00")} ${hour.formated("00")}:${minute.formated("00")}:${second.formated("00")}.${millisecond.formated("000")}";
@@ -41,33 +37,42 @@ String _anyToString(dynamic value) {
   }
 }
 
-int get _millsNow => DateTime.now().millisecondsSinceEpoch;
+class _MergeCall {
+  final void Function() _callback;
+  final int _delay;
+  final bool _interval;
+  int _lastTime = 0;
 
-Map<Object, MapEntry<int, void Function()>> _mergeMap = {};
+  _MergeCall(this._callback, {int delay = 1000, bool interval = false})
+      : _interval = interval,
+        _delay = delay;
 
-void _mergeCall(Object key, void Function() callback, {int delay = 1000, bool interval = false}) {
-  if (_mergeMap.containsKey(key)) {
-    _mergeMap[key] = MapEntry(_millsNow, callback);
-    return;
-  }
-  _mergeMap[key] = MapEntry(_millsNow, callback);
+  void trigger() {
+    int mills = DateTime.now().millisecondsSinceEpoch;
+    if (_lastTime + _delay > mills) {
+      _lastTime = mills;
+      return;
+    }
+    _lastTime = mills;
 
-  void invokeCallback() {
-    if (interval) {
-      _mergeMap.remove(key)?.value.call();
-    } else {
-      MapEntry<int, void Function()>? e = _mergeMap[key];
-      if (e == null) return;
-      int leftMills = e.key + delay - _millsNow;
-      if (leftMills <= 0) {
-        _mergeMap.remove(key)?.value.call();
+    void invokeCallback() {
+      if (_interval) {
+        _lastTime = 0;
+        _callback();
       } else {
-        Future.delayed(Duration(milliseconds: leftMills), invokeCallback);
+        if (_lastTime == 0) return;
+        int leftMills = _lastTime + _delay - DateTime.now().millisecondsSinceEpoch;
+        if (leftMills <= 0) {
+          _lastTime = 0;
+          _callback();
+        } else {
+          Future.delayed(Duration(milliseconds: leftMills), invokeCallback);
+        }
       }
     }
-  }
 
-  Future.delayed(Duration(milliseconds: delay), invokeCallback);
+    Future.delayed(Duration(milliseconds: _delay), invokeCallback);
+  }
 }
 
 class LogCall {

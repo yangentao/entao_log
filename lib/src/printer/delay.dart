@@ -5,8 +5,11 @@ abstract class DelayPrinter extends LogPrinter {
   final List<String> buffer = [];
   final int? maxLine;
   final int delay;
+  late final _MergeCall _mergeCall;
 
-  DelayPrinter({super.level, super.tags, this.maxLine, this.delay = 2000});
+  DelayPrinter({super.level, super.tags, this.maxLine, this.delay = 2000}) {
+    _mergeCall = _MergeCall(_flush, delay: delay, interval: true);
+  }
 
   void flush(String item);
 
@@ -30,6 +33,6 @@ abstract class DelayPrinter extends LogPrinter {
       _flush();
       return;
     }
-    _mergeCall('$this-${this.hashCode}', _flush, delay: delay, interval: true);
+    _mergeCall.trigger();
   }
 }

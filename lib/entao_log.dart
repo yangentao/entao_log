@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:println/println.dart';
 
-part 'src/level.dart';
 part 'src/printer/console.dart';
 part 'src/printer/delay.dart';
 part 'src/printer/dir.dart';
