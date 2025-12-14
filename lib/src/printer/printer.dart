@@ -19,17 +19,12 @@ abstract class LogPrinter implements StreamConsumer<LogItem>, EventSink<LogItem>
   Future<dynamic> addStream(Stream<LogItem> stream) {
     _sub?.cancel();
     var completer = Completer();
-    _sub = stream.listen(
-      add,
-      onError: completer.completeError,
-      onDone: completer.complete,
-      cancelOnError: true,
-    );
+    _sub = stream.listen(add, onError: completer.completeError, onDone: completer.complete, cancelOnError: true);
     return completer.future;
   }
 
   @override
-  Future<dynamic> close()  {
+  Future<dynamic> close() {
     _sub?.cancel();
     _sub = null;
     return Future.value();
@@ -59,6 +54,17 @@ extension LogSinkExt<T extends LogPrinter> on T {
     this._level = level ?? LogLevel.all;
     this._tags = tags ?? const {};
     this._filter = filter;
+    return this;
+  }
+
+  T install() {
+    _sub = xlog.listen(add);
+    return this;
+  }
+
+  T uninstall() {
+    _sub?.cancel();
+    _sub = null;
     return this;
   }
 }

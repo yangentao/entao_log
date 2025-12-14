@@ -128,8 +128,8 @@ class DirPrinter extends DelayPrinter {
   }
 
   @override
-  void flush(String item) {
+  void flush(String text) {
     FilePrinter fs = _checkFile();
-    fs.flush(item);
+    fs.flush(text);
   }
 }

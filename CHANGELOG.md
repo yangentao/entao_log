@@ -29,3 +29,6 @@
 
 ## 2.0.1
 * readme
+
+## 2.0.2
+* fix file write issue

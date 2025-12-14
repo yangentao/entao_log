@@ -11,7 +11,7 @@ abstract class DelayPrinter extends LogPrinter {
     _mergeCall = _MergeCall(_flush, delay: delay, interval: true);
   }
 
-  void flush(String item);
+  void flush(String text);
 
   @override
   Future<dynamic> close() {
